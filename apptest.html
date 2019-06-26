@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Apptest</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.js"></script>
+
+    <script type="text/javascript" src="//cdn.bitmovin.com/player/web/8/bitmovinplayer.js"></script>
+    <script type="text/javascript">
+        var initDone = false;
+        function init(msg) {
+            if (!initDone) {
+                const container = document.getElementById('player2');
+                const setupObj = {
+                    key: '{ourkey}'
+                };
+
+                const source = {
+                    "title": "hallo",
+                    "description": "hallo",
+                    "poster": "https://kf-vielgesundheit.sf.apa.at/vielgesundheit/20190311_13_288180_ekos_how_to_1_was_und_warum.jpg",
+                    "hls": "https://vielgesundheit.sf.apa.at/vs_vielgesundheit/smil:20190311_13_288180_ekos_how_to_1_was_und_warum_404.smil/playlist.m3u8?guid=015d6c20-8999-4a34-b680-fca368e18cbd",
+                    "progressive": "https://vs-pd09.sf.apa.at/vs_vielgesundheit/20190311_13_288180_ekos_how_to_1_was_und_warum_404.mp4?guid=015d6c20-8999-4a34-b680-fca368e18cbd"
+                };
+
+                $('#debug2').html($('#debug2').html() + 'Initializing from ' + msg + '<br/>');
+
+                var player2 = new bitmovin.player.Player(container, setupObj);
+
+                player2.load(source).then((result) => {
+                    initDone = true;
+                    $('#debug2').html($('#debug2').html() + 'initialized<br/>');
+                }).catch((reason) => {
+                    initDone = true;
+                    $('#debug2').html($('#debug2').html() + reason + '<br/>');
+
+                });
+            }
+        }
+
+        function initTimeout() {
+            init('Timeout');
+        }
+
+        function initClick() {
+            init('Click');
+        }
+
+        jQuery(document).ready(function () {
+            jQuery('#init').click(function() {
+                initClick();
+            });
+
+            try
+            {
+                init('document.ready');
+                setTimeout(initTimeout, 3000);
+            }
+            catch(e) {
+                alert(JSON.stringify(e));
+            }
+        });
+    </script>
+</head>
+<body>
+    <button id="init">Init neu</button>
+    <div id="player2" style="width:160px; height:90px"></div>
+    <div id="debug2"></div>
+</body>
+</html>
